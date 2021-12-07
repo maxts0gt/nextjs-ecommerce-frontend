@@ -1,4 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { ApiError } from '../../lib/api';
 import Head from 'next/head';
 import { ParsedUrlQuery } from 'querystring';
 import Title from '../../components/Title';
@@ -30,10 +31,13 @@ export const getStaticProps: GetStaticProps<
         const product = await getProduct(id);
         return {
             props: { product },
-            revalidate: 30,
+            revalidate: parseInt(process.env.REVALIDATE_SECONDS),
         };
-    } catch (error) {
-        return { notFound: true, }
+    } catch (err) {
+        if (err instanceof ApiError && err.status === 404) {
+            return { notFound: true }
+        }
+        throw err;
     }
 
 };
