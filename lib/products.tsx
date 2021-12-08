@@ -6,6 +6,7 @@ export interface Product {
 	title: string;
 	description: string;
 	price: string;
+	pictureUrl: string;
 }
 
 
@@ -26,6 +27,7 @@ function stripProduct(product: any): Product {
 		id: product.id,
 		title: product.title,
 		description: product.description,
-		price: '$' + product.price.toFixed(2)
+		price: '$' + product.price.toFixed(2),
+		pictureUrl: 'http://localhost:1337' + product.picture.url,
 	};
 }
