@@ -1,9 +1,8 @@
-// Option 1: fetch products on the server side (getStaticProps)
-
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
+import ProductCard from '../components/ProductCard';
 import Title from '../components/Title';
 import { getProducts, Product } from '../lib/products';
 
@@ -16,7 +15,7 @@ export const getStaticProps: GetStaticProps<HomePageProps> = async () => {
 	const products = await getProducts();
 	return {
 		props: { products },
-		revalidate: parseInt(process.env.REVALIDATE_SECONDS),
+		revalidate: 5 * 60,
 	};
 };
 
@@ -33,9 +32,7 @@ const HomePage: React.FC<HomePageProps> = ({ products }) => {
 				<ul>
 					{products.map((product) => (
 						<li key={product.id}>
-							<Link href={`/products/${product.id}`}>
-								<a>{product.title}</a>
-							</Link>
+							<ProductCard product={product} />
 						</li>
 					))}
 				</ul>
