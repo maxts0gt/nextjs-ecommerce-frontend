@@ -1,32 +1,26 @@
 import { useRouter } from 'next/router';
 import React, { FormEventHandler, useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import Button from "../components/Button";
 import Field from "../components/Field";
 import Input from "../components/Input";
 import Page from "../components/Page"
-import { fetchJson } from '../lib/api';
+import { useSignIn } from '../hooks/user';
 
 const SignInPage: React.FC = () => {
     const router = useRouter()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [status, setStatus] = useState({ loading: false, error: false });
+    const queryClient = useQueryClient();
+    const { signIn, signInError, signInLoading } = useSignIn();
+
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
 
-        setStatus({ loading: true, error: false });
-        try {
-            const response = await fetchJson('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-            setStatus({ loading: false, error: false });
-            console.log('sign in:', response);
+        const valid = await signIn(email, password);
+        if (valid) {
             router.push('/');
-        } catch (err) {
-            setStatus({ loading: false, error: true });
         }
 
     };
@@ -51,12 +45,12 @@ const SignInPage: React.FC = () => {
                         placeholder='Password' autoComplete="off"
                     />
                 </Field>
-                {status.error && (
+                {signInError && (
                     <p className="text-red-700">
                         Invalid credentials
                     </p>
                 )}
-                {status.loading ? (
+                {signInLoading ? (
                     <p>Loading...</p>
                 ) : (
                     <Button type="submit">

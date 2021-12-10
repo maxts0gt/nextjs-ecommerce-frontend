@@ -6,6 +6,7 @@ import { ParsedUrlQuery } from 'querystring';
 
 import { getProduct, getProducts, Product } from '../../lib/products';
 import Page from '../../components/Page';
+import { useUser } from '../../hooks/user';
 
 interface ProductPageParams extends ParsedUrlQuery {
     id: string;
@@ -59,6 +60,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                         <p className="test-lg font-bold mt-2">
                             {product.price}
                         </p>
+
                     </div>
                 </div>
             </Page>
