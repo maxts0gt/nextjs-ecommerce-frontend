@@ -1,12 +1,12 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { ApiError } from '../../lib/api';
-
+import AddToCartWidget from '../../components/AddToCardWidget';
 import Image from 'next/image';
 import { ParsedUrlQuery } from 'querystring';
-
+import { useUser } from '../../hooks/user';
 import { getProduct, getProducts, Product } from '../../lib/products';
 import Page from '../../components/Page';
-import { useUser } from '../../hooks/user';
+
 
 interface ProductPageParams extends ParsedUrlQuery {
     id: string;
@@ -46,6 +46,7 @@ export const getStaticProps: GetStaticProps<
 };
 
 const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
+    const user = useUser();
     return (
         <>
             <Page title={product.title}>
@@ -60,7 +61,7 @@ const ProductPage: React.FC<ProductPageProps> = ({ product }) => {
                         <p className="test-lg font-bold mt-2">
                             {product.price}
                         </p>
-
+                        {user && <AddToCartWidget productId={product.id} />}
                     </div>
                 </div>
             </Page>
